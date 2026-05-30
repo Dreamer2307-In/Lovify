@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Spotify Style Convocation Page</title>
+
+  <!-- GOOGLE FONT -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <!-- ICONS -->
+  <link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    body{
+      background:#121212;
+      color:white;
+      overflow-x:hidden;
+    }
+
+    /* MAIN LAYOUT */
+
+    .container{
+      display:flex;
+      min-height:100vh;
+    }
+
+    /* SIDEBAR */
+
+    .sidebar{
+      width:240px;
+      background:#000;
+      padding:25px 18px;
+      position:fixed;
+      height:100%;
+    }
+
+    .logo{
+      font-size:28px;
+      font-weight:700;
+      margin-bottom:40px;
+      color:#1DB954;
+    }
+
+    .menu{
+      display:flex;
+      flex-direction:column;
+      gap:22px;
+    }
+
+    .menu div{
+      display:flex;
+      align-items:center;
+      gap:15px;
+      color:#b3b3b3;
+      cursor:pointer;
+      transition:0.3s;
+      font-size:16px;
+    }
+
+    .menu div:hover{
+      color:white;
+    }
+
+    /* MAIN */
+
+    .main{
+      margin-left:240px;
+      width:100%;
+      padding:30px;
+      padding-bottom:120px;
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:35px;
+    }
+
+    .topbar h1{
+      font-size:34px;
+    }
+
+    .profile{
+    background:#282828;
+    padding:8px 15px;
+    border-radius:30px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+
+  .profile img{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid #1DB954;
+  }
+
+    /* BANNER */
+
+.banner{
+    background: linear-gradient(to right,#1DB954,#1e7b46);
+    border-radius: 25px;
+    padding: 40px;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+    min-height: 500px;
+}
+
+    .banner-text h2{
+      font-size:48px;
+      margin-bottom:15px;
+    }
+
+    .banner-text p{
+      max-width:500px;
+      line-height:1.7;
+      font-size:17px;
+    }
+
+.banner img{
+    width: 280px;
+    border-radius: 20px;
+    margin: 25px 0;
+}
+
+    /* SONG GRID */
+
+    .section-title{
+      font-size:26px;
+      margin-bottom:25px;
+    }
+
+    .song-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:25px;
+    }
+
+    .song-card{
+      background:#181818;
+      padding:18px;
+      border-radius:18px;
+      transition:0.4s;
+      cursor:pointer;
+      position:relative;
+    }
+
+    .song-card:hover{
+      background:#282828;
+      transform:translateY(-6px);
+    }
+
+    .song-card img{
+      width:100%;
+      height:220px;
+      object-fit:cover;
+      border-radius:15px;
+      margin-bottom:15px;
+    }
+
+    .song-card h3{
+      margin-bottom:8px;
+    }
+
+    .song-card p{
+      color:#b3b3b3;
+      font-size:14px;
+      line-height:1.5;
+    }
+
+    .play-btn{
+      position:absolute;
+      right:20px;
+      bottom:90px;
+      width:55px;
+      height:55px;
+      border-radius:50%;
+      background:#1DB954;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      color:black;
+      font-size:15px;
+      opacity:0;
+      transform:translateY(10px);
+      transition:0.3s;
+    }
+
+    .song-card:hover .play-btn{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    /* PLAYER */
+
+    .music-player{
+      position:fixed;
+      bottom:0;
+      left:0;
+      width:100%;
+      background:#181818;
+      border-top:1px solid #333;
+      padding:15px 25px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      z-index:999;
+    }
+
+    .song-info{
+      display:flex;
+      align-items:center;
+      gap:15px;
+      width:25%;
+    }
+
+    .song-info img{
+      width:60px;
+      height:60px;
+      object-fit:cover;
+      border-radius:10px;
+    }
+
+    .controls{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      width:50%;
+    }
+
+    .control-buttons{
+      display:flex;
+      gap:25px;
+      margin-bottom:12px;
+      font-size:20px;
+      align-items:center;
+    }
+
+    .control-buttons i{
+      cursor:pointer;
+    }
+
+    audio{
+      width:100%;
+    }
+
+    /* POPUP */
+
+    .popup{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background:rgba(0,0,0,0.85);
+      display:none;
+      justify-content:center;
+      align-items:center;
+      padding:20px;
+      z-index:10000;
+      backdrop-filter:blur(10px);
+    }
+
+    .popup-content{
+      width:90%;
+      max-width:1100px;
+      background:#181818;
+      border-radius:30px;
+      overflow:hidden;
+      display:flex;
+      animation:popup 0.4s ease;
+    }
+    .polaroid{
+    position:absolute;
+    width:120px;
+    padding:10px;
+    background:white;
+    border-radius:10px;
+  }
+
+  .p1{
+    left:450px;
+    top:180px;
+    transform:rotate(-12deg);
+  }
+
+  .p2{
+    right:220px;
+    top:200px;
+    transform:rotate(20deg);
+  }
+  .p3{
+    right:250px;
+    top:430px;
+    transform:rotate(-20deg);
+  }
+  .p4{
+    right:900px;
+    top:450px;
+    transform:rotate(20deg);
+  }
+  .p5{
+    right:1080px;
+    top:380px;
+    transform:rotate(20deg);
+  }
+  .p6{
+    right:100px;
+    top:360px;
+    transform:rotate(20deg);
+  }
+
+    @keyframes popup{
+      from{
+        transform:scale(0.8);
+        opacity:0;
+      }
+      to{
+        transform:scale(1);
+        opacity:1;
+      }
+    }
+
+    .popup-left{
+      flex:1;
+      min-height:600px;
+    }
+
+    .popup-left img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    .popup-right{
+      flex:1;
+      padding:50px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      background:linear-gradient(to bottom,#1DB954,#121212);
+    }
+
+    .popup-right h1{
+      font-size:55px;
+      margin-bottom:20px;
+    }
+
+    .popup-right p{
+      font-size:18px;
+      line-height:2;
+      margin-bottom:30px;
+    }
+    
+    .close{
+      position:absolute;
+      top:25px;
+      right:35px;
+      font-size:40px;
+      cursor:pointer;
+      color:white;
+    }
+
+    .popup-btn{
+      background:#1DB954;
+      color:black;
+      border:none;
+      padding:16px 30px;
+      border-radius:30px;
+      font-weight:bold;
+      cursor:pointer;
+      width:fit-content;
+      font-size:16px;
+    }
+
+    .slideshow{
+      position: relative;
+      width: 100%;
+      height: 220px;
+      overflow: hidden;
+      border-radius: 15px;
+      margin-bottom: 15px;
+    }
+  
+    .slide{
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+  
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+  
+    .slide.active{
+        opacity: 1;
+    }
+    .popup-slideshow{
+    position:relative;
+    width:100%;
+    height:100%;
+}
+
+.popup-slide{
+    position:absolute;
+    width:100%;
+    height:100%;
+    object-fit:contain;
+
+    opacity:0;
+    transition:1s;
+
+    transform:scale(1.05);
+}
+
+.popup-slide.active{
+    opacity:1;
+    transform:scale(1);
+}
+    /* MOBILE */
+    
+    @media(max-width:900px){
+      
+      .sidebar{
+        display:none;
+      }
+
+      .main{
+        margin-left:0;
+      }
+      
+      .popup-content{
+        flex-direction:column;
+      }
+      
+      .popup-left{
+        min-height:300px;
+      }
+
+      .popup-right h1{
+        font-size:35px;
+      }
+
+      .music-player{
+        flex-direction:column;
+        gap:15px;
+      }
+
+      .song-info,
+      .controls{
+        width:100%;
+      }
+    }
+
+
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <!-- SIDEBAR -->
+
+    <div class="sidebar">
+
+      <div class="logo">
+        <i class="fa-brands fa-spotify"></i>Lovify
+      </div>
+
+      <div class="menu">
+        <div><i class="fa-solid fa-house"></i> Home</div>
+        <div><i class="fa-solid fa-heart"></i> Memories</div>
+        <div><i class="fa-solid fa-graduation-cap"></i> Convocation</div>
+        <div><i class="fa-solid fa-music"></i> Favorite Songs</div>
+      </div>
+
+    </div>
+
+    <!-- MAIN -->
+
+    <div class="main">
+
+      <div class="topbar">
+
+        <h1> SLAYY GURL Playlist 🎓</h1>
+
+        <div class="profile">
+          <img src="images/pfp.jpeg" alt="Profile">
+          <span>SOHNI KURI</span>
+        </div>
+
+      </div>
+
+      <!-- BANNER -->
+
+    <div class="banner">
+
+      <h1>Congratulations</h1>
+
+      <h2>KHANDU PuTTAR</h2>
+
+      <img src="images/banner.jpeg">
+
+      <h3>JATT PASS HOGYA OYE !!</h3>
+
+    </div>
+
+    <img src="images/mini1.jpeg" class="polaroid p1">
+    <img src="images/mini2.jpeg" class="polaroid p2">
+    <img src="images/mini3.jpeg" class="polaroid p3">
+    <img src="images/mini4.jpeg" class="polaroid p4">
+    <img src="images/mini5.jpeg" class="polaroid p5">
+    <img src="images/mini6.jpeg" class="polaroid p6">
+
+    <script>
+function launchConfetti() {
+
+    const duration = 4000;
+          const end = Date.now() + duration;
+
+          (function frame() {
+
+              confetti({
+                  particleCount: 3,
+                  angle: 60,
+                  spread: 70,
+                  origin: { x: 0 }
+              });
+
+              confetti({
+                  particleCount: 3,
+                  angle: 120,
+                  spread: 70,
+                  origin: { x: 1 }
+              });
+
+              if (Date.now() < end) {
+                  requestAnimationFrame(frame);
+              }
+
+          })();
+          }
+
+      window.onload = launchConfetti;
+    </script>
+
+      <!-- SONG SECTION -->
+
+      <h2 class="section-title">Special Memories</h2>
+
+      <div class="song-grid">
+
+        <!-- CARD 1 -->
+
+        <div class="song-card"
+            onclick="openPopup(
+            [
+            'images/Jwak1.jpeg',
+            'images/Jwak2.jpeg',
+            'images/Jwak3.jpeg',
+            'images/Jwak4.jpeg'
+            ],
+            'songs/song1.mp3',
+            'NIKKI zaildar',
+            'Choti jahi khandu don 👧 jis nu pta vi nhi si wade hoke pta tak nhi houga ohne kithe jake padhna 📖 ek saal cu kadna or pher bhar chle jana ✈️ tado tah bas ohnu dance 💃 khana peena 🥘 and alll but pher vi oh chill 😎 rahi ehne maze kite teri photos dekh ke pta chlda duniya 🗺️ da sab toh pyara active bacha jeda bas activities janda rehnda si par lekin tu jini marji wadi badmash khandu don 🕴🏻bnja lekin tu mere samne oda hai jida teri ek chote hunde👧 di photo ch tu cup fad ke khadi hai cartoon wala idk you remember or not but i do khandu don for life 🤣🤣 '
+            )">
+
+        <div class="slideshow">
+
+        <img src="images/Jwak1.jpeg" class="slide active">
+        <img src="images/Jwak2.jpeg" class="slide">
+        <img src="images/Jwak3.jpeg" class="slide">
+        <img src="images/Jwak4.jpeg" class="slide">
+
+        </div>
+
+    <div class="play-btn">
+        <i class="fa-solid fa-play"></i>
+    </div>
+
+    <h3>PHELA ASI JAWAK HUNDE SI</h3>
+
+    <p>Click to open.</p>
+
+</div>
+
+        
+
+        <!-- CARD 2 -->
+
+        <div class="song-card"
+            onclick="openPopup(
+            [
+            'images/Kithe1.jpeg',
+            'images/Kithe2.jpeg',
+            'images/Kithe3.jpeg',
+            'images/Kithe4.jpeg',
+            'images/Kithe5.jpeg',
+            ],
+            'songs/song2.mp3',
+            '',
+            'Hun aage asi college 🏫 time teh jithe asi ehna chill marde si asi ehna kuch kita break de vich gurudwara 🪯 jana sada kathe beke lunch 🍛 khana tu menu khena ki lunch vich rotiya jada lyaya kar or me leke ana kathe beke food junction fried rice 🍚 manchurian khaane bahr jana dosta nal for coffee ☕️ and all and snap teh menu add nhi kita tuc par koini me odro di apni photos 🤍 chak ke pani si ede ch and apna matching 🪢 hona that was too crazy it was really like jida asi pura plan krke aande si same frequency 🤞🏻me ehna khush hona match hoye teh 🤓🫪 even ki asi mohali vi gaye si sonu kol khedan oh vi mast time si lekin usto baad kinu pta si ki tuc bar lang jo ge or apni gall ehni ghat hojuga i still miss those days alot and apko kon he bhul skta 🤓',
+            )">
+
+        <div class="slideshow">
+
+        <img src="images/Kithe1.jpeg" class="slide active">
+        <img src="images/Kithe2.jpeg" class="slide">
+        <img src="images/Kithe3.jpeg" class="slide">
+        <img src="images/Kithe4.jpeg" class="slide">
+        <img src="images/Kithe5.jpeg" class="slide">
+
+        </div>
+
+          <div class="play-btn">
+            <i class="fa-solid fa-play"></i>
+          </div>
+
+          <h3>Kithe aa sade dil di malika</h3>
+
+          <p>click to open</p>
+
+        </div>
+
+        <!-- CARD 3 -->
+
+        <div class="song-card"
+            onclick="openPopup(
+            [
+            'images/c1.jpeg',
+            'images/c2.jpeg',
+            'images/c3.jpeg',
+            'images/c4.jpeg',
+            'images/c5.jpeg',
+            ],
+            'songs/song3.mp3',
+            '',
+            'Hun its the big 2026 kinu ki pta si apna mel pher hojuga i think rabb ne aakhir kar mel kra he dita sohni kuri de nall teh hun bas aaj vese vi teri convocation 👩🏻‍🎓aa teh me sochya ki ek chotu jeha gift 🎁 or idk what to call this hihi but i wanted to do something for you because menu tere nal wese vi gall krke chnga lagda 😊as i say always jis din da milya jatti nu munda khenda jee nhi lgda 😅tu bhot mehnti hai bhot sohni hai bhot achi hai teh aaj da din tuc bas enjoy krna i hope ki eh dekh ke and padh ke tenu acha lga hoye mera bada man krda ki me vi othe hunda edi tez cheeka marda 🗣️ convocation teh ki tu embarras hojandi hahahahaha tanu odro he khendi eh munda mere nal nhi hai 🤣 pher apa chlde thoda nasha lehn COFFEE ☕️ after convocation. i miss hanging out with you hun bas cheti cheti ticket krao and india aajo bhot time hogya chlo  bye bye ❤️ tanuuu jiiiiiii '
+            )">
+
+        <div class="slideshow">
+
+        <img src="images/c1.jpeg" class="slide active">
+        <img src="images/c2.jpeg" class="slide">
+        <img src="images/c3.jpeg" class="slide">
+        <img src="images/c4.jpeg" class="slide">
+        <img src="images/c5.jpeg" class="slide">
+
+        </div>
+
+          <div class="play-btn">
+            <i class="fa-solid fa-play"></i>
+          </div>
+
+          <h3>Convocation Queen</h3>
+
+          <p>click to open</p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- POPUP -->
+
+  <div class="popup" id="popup">
+
+    <span class="close" onclick="closePopup()">&times;</span>
+
+    <div class="popup-content">
+
+      <div class="popup-left">
+
+    <div class="popup-slideshow">
+
+        <img id="popup-slide-1" class="popup-slide active">
+        <img id="popup-slide-2" class="popup-slide">
+        <img id="popup-slide-3" class="popup-slide">
+        <img id="popup-slide-4" class="popup-slide">
+
+    </div>
+
+</div>
+
+      <div class="popup-right">
+
+        <h1 id="popup-title"></h1>
+
+        <p id="popup-text"></p>
+
+        <button class="popup-btn">
+          <i class="fa-solid fa-heart"></i> Proud Of You
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- MUSIC PLAYER -->
+
+  <div class="music-player">
+
+    <div class="song-info">
+
+      <img id="player-img" src="images/photo1.jpg">
+
+      <div>
+        <h4 id="player-title">No song playing</h4>
+        <p>Graduation Playlist</p>
+      </div>
+
+    </div>
+
+    <div class="controls">
+
+      <div class="control-buttons">
+        <i class="fa-solid fa-backward"></i>
+        <i class="fa-solid fa-circle-play" style="font-size:35px"></i>
+        <i class="fa-solid fa-forward"></i>
+      </div>
+
+      <audio id="audio-player" controls>
+        <source src="">
+      </audio>
+
+    </div>
+
+    <div>
+      
+    </div>
+
+  </div>
+
+  <script>
+const popup = document.getElementById("popup");
+
+const popupTitle = document.getElementById("popup-title");
+
+const popupText = document.getElementById("popup-text");
+
+const audioPlayer = document.getElementById("audio-player");
+
+const playerTitle = document.getElementById("player-title");
+
+const playerImg = document.getElementById("player-img");
+
+let popupInterval;
+
+
+/* POPUP FUNCTION */
+
+function openPopup(images, song, title, text){
+
+    popup.style.display = "flex";
+
+    popupTitle.innerText = title;
+
+    popupText.innerText = text;
+
+    playerTitle.innerText = title;
+
+    playerImg.src = images[0];
+
+    audioPlayer.src = song;
+
+    audioPlayer.play();
+
+
+    // SET POPUP IMAGES
+
+    document.getElementById("popup-slide-1").src = images[0];
+    document.getElementById("popup-slide-2").src = images[1];
+    document.getElementById("popup-slide-3").src = images[2];
+    document.getElementById("popup-slide-4").src = images[3];
+
+
+    const popupSlides = document.querySelectorAll(".popup-slide");
+
+    let index = 0;
+
+    popupSlides.forEach(slide => {
+        slide.classList.remove("active");
+    });
+
+    popupSlides[0].classList.add("active");
+
+
+    clearInterval(popupInterval);
+
+    popupInterval = setInterval(() => {
+
+        popupSlides[index].classList.remove("active");
+
+        index = (index + 1) % popupSlides.length;
+
+        popupSlides[index].classList.add("active");
+
+    }, 2000);
+
+}
+
+
+/* CLOSE POPUP */
+
+function closePopup(){
+
+    popup.style.display = "none";
+
+    clearInterval(popupInterval);
+
+}
+
+
+/* CARD SLIDESHOWS */
+
+const slideshows = document.querySelectorAll(".slideshow");
+
+slideshows.forEach(slideshow => {
+
+    const slides = slideshow.querySelectorAll(".slide");
+
+    let index = 0;
+
+    setInterval(() => {
+
+        slides[index].classList.remove("active");
+
+        index = (index + 1) % slides.length;
+
+        slides[index].classList.add("active");
+
+    }, 2000);
+
+});
+
+  </script>
+
+</body>
+</html>
